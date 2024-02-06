@@ -53,4 +53,8 @@ export default {
   serverMiddleware: {
     '/api': '~/api',
   },
+  target: 'static',
+  router: {
+    base: '/<repository-name>/',
+  },
 }
