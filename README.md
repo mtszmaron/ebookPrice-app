@@ -29,6 +29,15 @@ The Ebook Price App allows the user to find info about ebook based on a list of 
 ### Input Data
 
 - List of authors/titles of ebooks.
+Example:
+```
+"Agatha Christie","The Mysterious Affair at Styles"
+"Agatha Christie","The Secret Adversary"
+"Agatha Christie","And Then There Were None"
+"Agatha Christie","Murder on the Orient Express"
+"Agatha Christie","The Murder of Roger Ackroyd"
+"Agatha Christie","Death on the Nile"
+```
 
 ### Output Data
 
