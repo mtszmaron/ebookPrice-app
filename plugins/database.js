@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const sqlite3 = require('sqlite3').verbose()
 
 function connectToDB() {

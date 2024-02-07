@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const { Router } = require('express')
 const axios = require('axios')
 const router = Router()
@@ -12,7 +13,7 @@ router.post('/ebooks', async (req, res) => {
   const iTunesDataArray = []
   const formItems = req.body
 
-  console.log('Otrzymane dane:', formItems)
+  console.log('Received data: ', formItems)
 
   let currencyDateRange = {}
 
@@ -64,8 +65,8 @@ router.post('/ebooks', async (req, res) => {
     saveToDb(finalDataArray)
     res.send(finalDataArray)
   } catch (error) {
-    console.error('Wystąpił błąd:', error)
-    res.status(500).send('Wystąpił błąd podczas przetwarzania danych')
+    console.error('There was an error while processing data: ', error)
+    res.status(500).send('There was an error while processing data')
   }
 })
 router.get('/ebooks', async (req, res) => {
@@ -73,12 +74,10 @@ router.get('/ebooks', async (req, res) => {
     const data = await selectAllData()
     res.send(data)
   } catch (error) {
-    console.error('Wystąpił błąd:', error)
-    res.status(500).send('Wystąpił błąd podczas przetwarzania danych')
+    console.error('There was an error while processing data: ', error)
+    res.status(500).send('There was an error while processing data')
   }
 })
-
-module.exports = router
 
 async function fetchDataFromiTunesAPI(item) {
   try {
@@ -112,7 +111,7 @@ async function fetchDataFromiTunesAPI(item) {
     }
     return null
   } catch (error) {
-    console.error('Wystąpił błąd:', error)
+    console.error('There was and error while fetching data from NBP: ', error)
     return null
   }
 }
@@ -124,7 +123,7 @@ async function fetchDataFromNBPAPI(year, currency) {
     )
     return response.data
   } catch (error) {
-    console.error('Wystąpił błąd podczas pobierania danych:', error)
+    console.error('There was and error while fetching data from NBP:', error)
     return null
   }
 }
@@ -140,10 +139,8 @@ function formatDate(dateString) {
 }
 
 function updatePriceDateRange(date, currency, currencyDateRange) {
-  // Sprawdź, czy obiekt exchangeRates zawiera dane dla danej waluty
   const year = date.split('-')[0]
   if (!Object.prototype.hasOwnProperty.call(currencyDateRange, currency)) {
-    // Jeśli obiekt nie zawiera danej waluty, przypisz podaną datę jako najmniejszą i największą datę dla tej waluty
     currencyDateRange[currency] = {
       years: [year],
     }
@@ -154,7 +151,6 @@ function updatePriceDateRange(date, currency, currencyDateRange) {
 }
 
 function selectAllData() {
-  // Zwracamy obietnicę, która zostanie rozwiązana po pomyślnym zakończeniu operacji
   return new Promise((resolve, reject) => {
     connectToDB()
       .then((db) => {
@@ -174,23 +170,18 @@ function selectAllData() {
                 },
               }
             })
-
-            // Po przekształceniu wyników zapytania, rozwiązujemy obietnicę z przekształconymi danymi
             resolve(transformedData)
           })
           .catch((err) => {
             console.error('Error:', err)
-            // Jeśli wystąpił błąd, odrzucamy obietnicę z błędem
             reject(err)
           })
           .finally(() => {
-            // Zamknięcie połączenia z bazą danych po zakończeniu operacji
             db.close()
           })
       })
       .catch((err) => {
         console.error('Error connecting to database:', err)
-        // Jeśli wystąpił błąd połączenia, odrzucamy obietnicę z błędem
         reject(err)
       })
   })
@@ -213,3 +204,5 @@ function saveToDb(data) {
       console.error('Error connecting to database:', err)
     })
 }
+
+module.exports = router

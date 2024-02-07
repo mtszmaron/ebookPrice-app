@@ -146,13 +146,14 @@ export default {
     }
   },
   async mounted() {
-    this.ebookRequestList = this.$store.state.requestData
-    console.log('data: ' + this.$store.state.requestData)
+    try {
+      this.ebookRequestList = this.$store.state.requestData
+      const response = await axios.get('api/ebooks')
 
-    const response = await axios.get('api/ebooks')
-
-    this.ebookDBList = response.data
-    console.log('Odpowiedź z serwera:', response.data)
+      this.ebookDBList = response.data
+    } catch (error) {
+      alert(error)
+    }
   },
   methods: {
     changeTableType(type) {

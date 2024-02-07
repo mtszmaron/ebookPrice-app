@@ -162,12 +162,13 @@ export default {
     },
 
     async submitForm(items) {
-      // Tutaj możesz umieścić logikę wysyłania formularza
-      const response = await axios.post('api/ebooks', items)
-
-      console.log('Odpowiedź z serwera:', response.data)
-      this.$store.commit('setMyData', response.data)
-      this.$router.push('/ebooks')
+      try {
+        const response = await axios.post('api/ebooks', items)
+        this.$store.commit('setMyData', response.data)
+        this.$router.push('/ebooks')
+      } catch (error) {
+        alert(error)
+      }
     },
   },
 }

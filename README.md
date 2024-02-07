@@ -1,68 +1,82 @@
-# ebookPrice-app
+## Ebook Price App
 
-## Build Setup
+### Description
 
-```bash
-# install dependencies
-$ npm install
+The Ebook Price App allows the user to find info about ebook based on a list of authors/titles. The application uses the iTunes Search API to retrieve information about ebooks and the NBP API to fetch currency exchange rates.
 
-# serve with hot reload at localhost:3000
-$ npm run dev
+### Features
 
-# build for production and launch server
-$ npm run build
-$ npm run start
+- Searching for the information about ebook with its exchange rate and price converted to PLN based on a list of authors/titles.
+- Saving the retrieved data in a database along with information about the exchange rate and the table number from which the rate comes.
+- Ability to share the combined data through a custom API.
+- Retrieve data from database through web page.
 
-# generate static project
-$ npm run generate
+### User Guide
+
+1. Running the application:
+   - Clone the repository of the application.
+   - Install the required dependencies: `npm install`.
+   - Start the application: `npm run dev`.
+
+2. Searching for ebook price:
+   - Enter a list of authors/titles.
+   - Click the "Submit" button.
+   - Data about ebooks will be displayed on the screen.
+
+3. Saving data:
+   - The data will be automatically saved to the database along with information about the exchange rate and the table number.
+
+### Input Data
+
+- List of authors/titles of ebooks.
+
+### Output Data
+
+The output data will be organized as follows:
 ```
+[
+  {
+    "name": "Agatha Christie",
+    "title": "The Lying Game",
+    "curr": "USD",
+    "price": 16.99,
+    "date": "2022-09-08",
+    "fromNBP": {
+      "rate": 3.1288,
+      "pricePLN": 53.158312,
+      "tableNo": "51/A/NBP/2012"
+    }
+  },
+  {
+    "name": "Agatha Christie",
+    "title": "Murder on the Orient Express",
+    "curr": "USD",
+    "price": 2.99,
+    "date": "2020-04-30",
+    "fromNBP": {
+      "rate": 3.1288,
+      "pricePLN": 9.355112,
+      "tableNo": "51/A/NBP/2012"
+    }
+  }
+]
 
-For detailed explanation on how things work, check out the [documentation](https://nuxtjs.org).
+```
+### Database
 
-## Special Directories
+Database was created using SQLite for local data storage.
 
-You can create the following extra directories, some of which have special behaviors. Only `pages` is required; you can delete them if you don't want to use their functionality.
+![ERD Diagram](documentation/diagram_erd.PNG)
+### Sequence Diagram
 
-### `assets`
+![Sequence Diagram](documentation/sequence_diagram.PNG)
 
-The assets directory contains your uncompiled assets such as Stylus or Sass files, images, or fonts.
+### Technologies
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/assets).
+- Vue.js/Nuxt.js with Tailwind.CSS for building the user interface.
+- Node.js/Express.js for backend handling.
+- SQLite for data storage.
 
-### `components`
+### Author
 
-The components directory contains your Vue.js components. Components make up the different parts of your page and can be reused and imported into your pages, layouts and even other components.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/components).
-
-### `layouts`
-
-Layouts are a great help when you want to change the look and feel of your Nuxt app, whether you want to include a sidebar or have distinct layouts for mobile and desktop.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/layouts).
-
-### `pages`
-
-This directory contains your application views and routes. Nuxt will read all the `*.vue` files inside this directory and setup Vue Router automatically.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/get-started/routing).
-
-### `plugins`
-
-The plugins directory contains JavaScript plugins that you want to run before instantiating the root Vue.js Application. This is the place to add Vue plugins and to inject functions or constants. Every time you need to use `Vue.use()`, you should create a file in `plugins/` and add its path to plugins in `nuxt.config.js`.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/plugins).
-
-### `static`
-
-This directory contains your static files. Each file inside this directory is mapped to `/`.
-
-Example: `/static/robots.txt` is mapped as `/robots.txt`.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/static).
-
-### `store`
-
-This directory contains your Vuex store files. Creating a file in this directory automatically activates Vuex.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/store).
+Author: Mateusz Maroń
