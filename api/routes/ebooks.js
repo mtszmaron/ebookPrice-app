@@ -19,8 +19,10 @@ router.post('/ebooks', async (req, res) => {
 
   try {
     for (const item of formItems) {
+      // For each item send request to iTunesAPi
       const iTunesData = await fetchDataFromiTunesAPI(item)
       if (iTunesData) {
+        // If we got data, we save the year of release for each currency.
         currencyDateRange = updatePriceDateRange(
           iTunesData.date,
           iTunesData.curr,
@@ -29,9 +31,11 @@ router.post('/ebooks', async (req, res) => {
         iTunesDataArray.push(iTunesData)
       }
     }
+    // For each currency and for each year, fetch data from NBP api
     for (const currency in currencyDateRange) {
       for (const year of currencyDateRange[currency].years) {
         const NBPData = await fetchDataFromNBPAPI(year, currency)
+        // Loop through items and if an item has the same date, save data for it
         for (const data in iTunesDataArray) {
           if (iTunesDataArray[data].curr === currency) {
             const foundRate = NBPData.rates.find(
@@ -46,6 +50,7 @@ router.post('/ebooks', async (req, res) => {
                 pricePLN: calculatedPrice,
                 tableNo: foundRate.no,
               }
+              // Push data to the final array and delete from the itunes array to reduce loop
               finalDataArray.push(iTunesDataArray[data])
               iTunesDataArray.splice(data, 1)
             }
@@ -53,6 +58,7 @@ router.post('/ebooks', async (req, res) => {
         }
       }
     }
+    // If we have data from itunes but no data from NBP, insert null values
     for (const data in iTunesDataArray) {
       iTunesDataArray[data].fromNBP = {
         rate: null,
@@ -61,7 +67,7 @@ router.post('/ebooks', async (req, res) => {
       }
       finalDataArray.push(iTunesDataArray[data])
     }
-
+    // Save data to DB and then send it back to the front end
     saveToDb(finalDataArray)
     res.send(finalDataArray)
   } catch (error) {
@@ -86,6 +92,7 @@ async function fetchDataFromiTunesAPI(item) {
     const entity = 'ebook'
     const attribute = 'titleTerm'
 
+    // We fetch data looking by title
     const response = await axios.get(`https://itunes.apple.com/search`, {
       params: {
         term,
@@ -94,12 +101,14 @@ async function fetchDataFromiTunesAPI(item) {
         attribute,
       },
     })
+    // Loop through received data, if title and author is the same then pick first found item.
     for (const element of response.data.results) {
       if (
         element.artistName.toLowerCase() === item.author.toLowerCase() &&
         element.trackName.toLowerCase() === item.title.toLowerCase()
       ) {
-        const formattedDate = await formatDate(element.releaseDate)
+        // change date to preffered format
+        const formattedDate = formatDate(element.releaseDate)
         return {
           name: element.artistName,
           title: element.trackName,
@@ -139,6 +148,7 @@ function formatDate(dateString) {
 }
 
 function updatePriceDateRange(date, currency, currencyDateRange) {
+  // Look for defined year, if it isnt already in our object then save it
   const year = date.split('-')[0]
   if (!Object.prototype.hasOwnProperty.call(currencyDateRange, currency)) {
     currencyDateRange[currency] = {
@@ -151,6 +161,7 @@ function updatePriceDateRange(date, currency, currencyDateRange) {
 }
 
 function selectAllData() {
+  // Select all data from DB
   return new Promise((resolve, reject) => {
     connectToDB()
       .then((db) => {
@@ -187,6 +198,7 @@ function selectAllData() {
   })
 }
 function saveToDb(data) {
+  // Save data to DB
   connectToDB()
     .then((db) => {
       insertData(db, data)
