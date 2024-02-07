@@ -66,10 +66,10 @@ The output data will be organized as follows:
 
 Database was created using SQLite for local data storage.
 
-![ERD Diagram](documentation/diagram_erd.PNG)
+![ERD Diagram](documentation/diagram_erd.png)
 ### Sequence Diagram
 
-![Sequence Diagram](documentation/sequence_diagram.PNG)
+![Sequence Diagram](documentation/sequence_diagram.png)
 
 ### Technologies
 
